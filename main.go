@@ -2,6 +2,7 @@ package main
 
 import (
 	"go-campaign/auth"
+	"go-campaign/campaign"
 	"go-campaign/handler"
 	"go-campaign/helper"
 	"go-campaign/user"
@@ -23,9 +24,10 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	db.AutoMigrate(&user.User{})
+	db.AutoMigrate(&user.User{}, &campaign.Campaign{}, &campaign.CampaignImage{})
 
 	userRepository := user.NewRepository(db)
+	// campaignRepository := campaign.NewRepository(db)
 	userService := user.NewService(userRepository)
 	authService := auth.NewService()
 	userHandler := handler.NewUserHandler(userService, authService)
