@@ -2,8 +2,10 @@ package payment
 
 import (
 	"go-campaign/user"
+	"os"
 	"strconv"
 
+	"github.com/joho/godotenv"
 	midtrans "github.com/veritrans/go-midtrans"
 )
 
@@ -19,9 +21,14 @@ func NewService() *service {
 }
 
 func (s *service) GetPaymentURL(transaction Transaction, user user.User) (string, error) {
+	errEnv := godotenv.Load()
+	if errEnv != nil {
+		panic("Gagal terhubung ke file env")
+	}
+
 	midclient := midtrans.NewClient()
-	midclient.ServerKey = "SB-Mid-server-7PFeeRdCJX11yQpkvBUDVnk3"
-	midclient.ClientKey = "SB-Mid-client-RDaKUpFIsKheTgy7"
+	midclient.ServerKey = os.Getenv("MIDTRANS_SERVERKEY")
+	midclient.ClientKey = os.Getenv("MIDTRANS_CLIENTKEY")
 	midclient.APIEnvType = midtrans.Sandbox
 
 	snapGateway := midtrans.SnapGateway{
